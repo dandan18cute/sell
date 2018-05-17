@@ -9,6 +9,10 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
+      path: '/',
+      redirect: 'goods'
+    },
+    {
       path: '/goods',
       component: goods
     },
@@ -20,5 +24,6 @@ export default new Router({
       path: '/seller',
       component: seller
     }
-  ]
+  ],
+  linkActiveClass: 'active'
 });
