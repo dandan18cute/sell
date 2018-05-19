@@ -1,10 +1,30 @@
 <template>
 <div class="header">
-我是 header
+<div class="content-wrapper">
+<div class="avatar">
+<img width="64" height="64" :src="seller.avatar">
+</div>
+<div class="content">
+<div class="title">
+<span class="brand"></span>
+<span class="name">{{seller.name}}</span>
+</div>
+<div class="description">
+  {{seller.description}}/{{seller.deliveryTime}}
+</div>
+</div>
+</div>
+<div class="bulletin-wrapper"></div>
 </div>
 </template>
 <script type="text/javascript">
-export default {};
+export default {
+  props: {
+    seller: {
+      type: Object
+    }
+  }
+};
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 </style>

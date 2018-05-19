@@ -73,27 +73,27 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
+    },
+    before (app) {
+      app.get('/api/seller', (req, res) => {
+        res.json({
+          errno: 0,
+          data: seller
+        })//接口返回json数据，上面配置的数据seller就赋值给data请求后调用
+      })
+      app.get('/api/goods', (req, res) => {
+        res.json({
+          errno: 0,
+          data: goods
+        })
+      })
+      app.get('/api/ratings', (req, res) => {
+        res.json({
+          errno: 0,
+          data: ratings
+        })
+      })
     }
-  },
-  before(app) {
-    app.get('/api/seller', (req, res) => {
-      res.json({
-        errno: 0,
-        data,seller
-      })//接口返回json数据，上面配置的数据seller就赋值给data请求后调用
-    }),
-    app.get('/api/goods', (req, res) => {
-      res.json({
-        errno: 0,
-        data,goods
-      })，
-    }),
-    app.get('/api/ratings', (req, res) => {
-      res.json({
-        errno: 0,
-        data,ratings
-      })，
-    }),
   },
   plugins: [
     new webpack.DefinePlugin({
