@@ -2,7 +2,7 @@
   <div class="goods">
   	<div class="menu-wrapper" ref="menuWrapper">
   	  <ul>
-  	  	<li v-for="item in goods" class="menu-item" ref="menuList">
+  	  	<li v-for="(item,index) in goods" class="menu-item" ref="menuList" :class="{'current':currentIndex===index}" @click = "selectMenu(index,$event)">
   	  	  <span class="text border-1px">
   	  	  	<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
   	  	  </span>
@@ -22,12 +22,10 @@
   	  	  	  	<h2 class="name">{{food.name}}</h2>
   	  	  	  	<p class="desc">{{food.description}}</p>
   	  	  	  	<div class="extra">
-  	  	  	  	  <span class="count">月售{{food.sellCount}}份</span>
-  	  	  	  	  <span>好评率{{food.rating}}%</span>
+  	  	  	  	  <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
   	  	  	  	</div>
   	  	  	  	<div class="price">
-  	  	  	  	  <span class="now">￥{{food.price}}</span>
-  	  	  	  	  <span class="new" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+  	  	  	  	  <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
   	  	  	  	</div>
   	  	  	  </div>
   	  	  	</li>
@@ -48,8 +46,23 @@ export default {
   },
   data() {
     return {
-      goods: []
+      goods: [],
+      listHeight: [],
+      scrollY: 0
     };
+  },
+  computed: {
+    currentIndex(){
+      for(let i =0; i<this.listHeight.length;i++){
+        let height1 = this.listHeight[i];
+        let height2 = this.listHeight[i+1];
+        if(!height2 || (this.scrollY >= height1 && this.scrollY <height2)){
+          //this._followScroll(i);
+          return i;
+        }
+      }
+      return 0;
+    }
   },
   created() {
     this.$http.get('/api/goods').then((response) => {
@@ -58,17 +71,43 @@ export default {
         this.goods = response.data;
         this.$nextTick(() => {
         this._initScroll();
+        this._calculateHeight();
         });
       }
     });
     this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
   },
   methods: {
-    _initScroll() {
-    this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
-    this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{});
+  selectMenu(index,event) {
+    if(!event._constructed){
+      return;
     }
-  }
+    let foodList = this.$refs.foodList;
+    let el = foodList[index];
+    this.foodsScroll.scrollToElement(el,300);
+  },
+    _initScroll() {
+    this.meunScroll = new BScroll(this.$refs.menuWrapper, {
+      click: true
+    });
+    this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{
+      probeType: 3
+    });
+    this.foodsScroll.on('scroll',(pos)=>{
+      this.scrollY = Math.abs(Math.round(pos.y));  
+    });
+    },
+    _calculateHeight() {
+      let foodList = this.$refs.foodList;
+      let height = 0;
+      this.listHeight.push(height);
+      for(let i =0; i<foodList.length; i++){
+        let item = foodList[i];
+        height += item.clientHeight;
+        this.listHeight.push(height);
+      }
+    },
+  },
 };
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
@@ -90,6 +129,14 @@ export default {
       width: 56px
       padding: 0 12px
       line-height: 14px
+      &.current
+        position: relative
+        z-index: 10
+        margin-top: -1px
+        background: #fff
+        font-weight: 700
+        .text
+          border-none()
       .icon
         display: inline-block
         vertical-align: top
@@ -148,10 +195,11 @@ export default {
       	  font-size: 10px
       	  color: rgb(147,153,159)
       	.desc
+      	  line-height: 12px
       	  margin-bottom: 8px	
       	.extra
       	  line-height: 10px
-      	  &.count
+      	  .count
       	    margin-right: 12px
       	.price
       	  font-weight: 700
