@@ -1,17 +1,17 @@
 <template>
   <div class="goods">
-  	<div class="menu-wrapper" v-el:menu-wrapper>
+  	<div class="menu-wrapper" ref="menuWrapper">
   	  <ul>
-  	  	<li v-for="item in goods" class="menu-item">
+  	  	<li v-for="item in goods" class="menu-item" ref="menuList">
   	  	  <span class="text border-1px">
   	  	  	<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
   	  	  </span>
   	  	</li>
   	  </ul>
     </div>
-    <div class="foods-wrapper" v-el:foods-wrapper>
+    <div class="foods-wrapper" ref="foodsWrapper">
   	  <ul>
-  	  	<li v-for="item in goods" class="food-list">
+  	  	<li v-for="item in goods" class="food-list" ref = "foodList">
   	  	  <h1 class="title">{{item.name}}</h1>
   	  	  <ul>
   	  	  	<li v-for="food in item.foods" class="food-item border-1px">
@@ -56,17 +56,17 @@ export default {
       response = response.body;
       if (response.errno === ERR_OK) {
         this.goods = response.data;
-        this.$nextTick(() =>{
+        this.$nextTick(() => {
         this._initScroll();
-        })
+        });
       }
     });
     this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
   },
   methods: {
-    innitScroll() {
-    this.menuScroll = new BScroll(this.$els.menu-wrapper, {});
-    this.foodsScroll = new BScroll(this.$els.foods-wrapper,{});
+    _initScroll() {
+    this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
+    this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{});
     }
   }
 };
