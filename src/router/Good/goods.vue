@@ -27,6 +27,9 @@
   	  	  	  	<div class="price">
   	  	  	  	  <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
   	  	  	  	</div>
+                <div class="cartControl-wrapper">
+                  <cartControl :food="food"></cartControl>
+                </div>
   	  	  	  </div>
   	  	  	</li>
   	  	  </ul>
@@ -39,6 +42,7 @@
 <script type="text/ecmascript-6">
 import BScroll from 'better-scroll';
 import shopcart from '../../components/shopcart/shopcart';
+import cartControl from '../../components/cartControl/cartControl';
   const ERR_OK = 0;
 export default {
   props: {
@@ -112,6 +116,7 @@ export default {
   },
   components: {
     shopcart,
+    cartControl,
   }
 };
 </script>
