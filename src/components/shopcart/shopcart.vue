@@ -45,6 +45,8 @@
     computed: {
       totalPrice() {
         let total = 0;
+        console.log(food.prize);
+        console.log(food.count);
         this.selectFoods.forEach((food) => {
           total += food.prize * food.count;
         });
@@ -144,7 +146,6 @@
         font-weight: 700
         &.highlight
           color: #fff
-          
       .desc
         display: inline-block
         vertical-align: top
