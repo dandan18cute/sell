@@ -36,7 +36,7 @@
   	  	</li>
   	  </ul>
     </div>
-    <shopcart :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -103,6 +103,9 @@ export default {
     let el = foodList[index];
     this.foodsScroll.scrollToElement(el,300);
   },
+ _drop(target) {
+      this.$refs.shopcart.drop(target);
+    },
     _initScroll() {
     this.meunScroll = new BScroll(this.$refs.menuWrapper, {
       click: true
@@ -125,10 +128,16 @@ export default {
         this.listHeight.push(height);
       }
     },
+   
   },
   components: {
     shopcart,
     cartControl,
+  },
+  events:{
+    'cart.add'(target){
+      this._drop(target);
+    }
   }
 };
 </script>
