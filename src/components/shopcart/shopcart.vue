@@ -20,17 +20,18 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+  import cartcontrol from '../cartControl/cartControl';
   export default {
     props: {
       selectFoods: {
        type: Array,
        default() {
-         return [
-         {
-         	prize: 10,
-         	count: 1
-         }
-         ];
+         return [   
+	 {
+              price: 10,
+              count: 1
+            }
+          ];
        }
       },
       deliveryPrice: {
@@ -45,10 +46,8 @@
     computed: {
       totalPrice() {
         let total = 0;
-        console.log(food.prize);
-        console.log(food.count);
         this.selectFoods.forEach((food) => {
-          total += food.prize * food.count;
+          total += food.price * food.count;
         });
         return total;
       },
@@ -76,10 +75,14 @@
         return 'enough';
       }
     }
+  },
+  components: {
+      cartcontrol
     }
-  };
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
+@import "../../common/stylus/mixin.styl"
 .shopCart
   position: fixed
   left: 0
