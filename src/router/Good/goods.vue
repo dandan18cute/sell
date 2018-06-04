@@ -54,7 +54,8 @@ export default {
     return {
       goods: [],
       listHeight: [],
-      scrollY: 0
+      scrollY: 0,
+       selectedFood: {}
     };
   },
   computed: {
@@ -103,8 +104,20 @@ export default {
     let el = foodList[index];
     this.foodsScroll.scrollToElement(el,300);
   },
+  selectFood(food, event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.selectedFood = food;
+        this.$refs.food.show();
+      },
+      addFood(target) {
+        this._drop(target);
+      },
  _drop(target) {
-      this.$refs.shopcart.drop(target);
+   this.$nextTick(() => {
+     this.$refs.shopcart.drop(target);
+  });
     },
     _initScroll() {
     this.meunScroll = new BScroll(this.$refs.menuWrapper, {
@@ -115,7 +128,10 @@ export default {
       probeType: 3
     });
     this.foodsScroll.on('scroll',(pos)=>{
+    
+    if(pos.y <=0 ){
       this.scrollY = Math.abs(Math.round(pos.y));  
+  }
     });
     },
     _calculateHeight() {
@@ -128,16 +144,16 @@ export default {
         this.listHeight.push(height);
       }
     },
+     _followScroll(index) {
+        let menuList = this.$refs.menuList;
+        let el = menuList[index];
+        this.meunScroll.scrollToElement(el, 300, 0, -100);
+      }
    
   },
   components: {
     shopcart,
     cartControl,
-  },
-  events:{
-    'cart.add'(target){
-      this._drop(target);
-    }
   }
 };
 </script>

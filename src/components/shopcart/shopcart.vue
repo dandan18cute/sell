@@ -1,6 +1,6 @@
 <template>
   <div class="shopCart">
-  	<div class="content">
+  	<div class="content" @click="toggleList">
   	  <div class="content-left">
   	  	<div class="logo-wrapper">
   	  	  <div class="logo" :class="{'highlight':totalCount>0}">
@@ -11,7 +11,7 @@
   	  	<div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
   	  	<div class="desc">另需配送费￥{{deliveryPrice}}元</div>
   	  </div>
-  	  <div class="content-right">
+  	  <div class="content-right" @click.stop.prevent="pay">
   	  	<div class="pay" :class="payClass">
   	  	  {{payDesc}}
   	  	</div>
@@ -19,17 +19,37 @@
       </div>
       <div class="ball-container">
         <div v-for="ball in balls">
-          <transition name="drop"> 
+          <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop"> 
           <div class="ball"v-show="ball.show" >
             <div class="inner inner-hook"></div>
           </div>
          </transition>
         </div>
         </div>
+      <div class="shopcart-list" v-show="listShow" transition="fold">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty">清空</span>
+        </div>
+        <div class="list-content">
+          <ul>
+            <li class="food" v-for="food in selectFoods">
+              <span class="name">{{food.name}}</span>
+              <div class="price">
+                <span>￥{{food.price*food.count}}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol></cartcontrol>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
   	</div>
   </div>
 </template>
 <script type="text/ecmascript-6">
+  import BScroll from 'better-scroll';
   import cartcontrol from '../cartControl/cartControl';
   export default {
     props: {
@@ -72,8 +92,9 @@
             show: false
           }
         ],
-        dropBalls:[]
-      }
+        dropBalls:[],
+        fold: true
+      };
     },
     computed: {
       totalPrice() {
@@ -83,14 +104,14 @@
         });
         return total;
       },
-    totalCount() {
+      totalCount() {
       let count = 0;
       this.selectFoods.forEach((food) =>{
         count+=food.count;
       });
       return count;
-    },
-    payDesc() {
+      },
+      payDesc() {
       if (this.totalPrice === 0){
         return `￥${this.minPrice}元起送`;
       }else if(this.totalPrice<this.minPrice){
@@ -99,18 +120,23 @@
       }else{
         return '去结算';
       } 
-    },
-    payClass() {
+      },
+      payClass() {
       if(this.totalPrice<this.minPrice){
         return 'not-enough';
       }else{
         return 'enough';
       }
-    }
-  },
-  components: {
-      cartcontrol
-  },
+      },
+      listShow(){
+        if(!this.totalCount){
+          this.fold = true;
+          return false;
+        }
+        let show = !this.fold;
+        return show;
+      }
+    },
   methods: {
     drop(el){
       for(let i = 0; i < this.balls.length; i++){
@@ -122,33 +148,53 @@
           return;
         }
       }
+    },
+    beforeDrop(el) {
+      let count = this.balls.length;
+      while (count--) {
+        let ball = this.balls[count];
+        if(ball.show) {
+          let rect = ball.el.getBoundingClientRect();
+          let x = rect.left-32;
+          let y = -(window.innerHeight-rect.top-22);
+          el.style.display = '';
+          el.style.webkitTransform=`translate3d(0,${y}px,0)`;
+          el.style.transform = `translate3d(0,${y}px,0)`;
+          let inner = el.getElementsByClassName('inner-hook')[0];
+          inner.style.webkitTransform =`translate3d(${x}px,0,0)`;
+          inner.style.transform = `translate3d(${x}px,0,0)`;
+        } 
+      }
+    },
+    dropping(el,done) {
+    /*eslint-disable no-unused-vars*/
+      let rf = el.offsetHeight;
+      this.$nextTick(() =>{
+        el.style.webkitTransform='translate3d(0,0,0)';
+        el.style.transform = 'translate3d(0,0,0)';
+        let inner = el.getElementsByClassName('inner-hook')[0];
+        inner.style.webkitTransform = 'translate3d(0,0,0)';
+        inner.style.transform = 'translate3d(0,0,0)';
+        el.addEventListener('transitionend', done);
+      });
+    },
+    afterDrop(el) {
+      let ball = this.dropBalls.shift();
+      if(ball) {
+        ball.show = false;
+        el.style.display = 'none';
+      }
+    },
+    toggleList() {
+      if(!this.totalCount){
+        return;
+      }
+      this.fold = !this.fold;
     }
   },
-  transitions:{
-    drop: {
-      beforeEnter(el) {
-        let count = this.balls.length;
-        while (count--) {
-          let ball = this.balls[count];
-          if(ball.show) {
-            let rect = ball.el.getBoundingClientReact();
-            let x = rect.left-32;
-            let y = -(window.innerHeight-rect.top-22);
-            el.style.display = '';
-            el.style.webkitTransform='translate3d(0,${y}px,0)';
-            let inner = el.getElementByClassName('inner-hook')[0];
-            inner.style.webkitTransform
-          } 
-        }
-      },
-      enter(el) {
-
-      },
-      afterEnter(el) {
-
-      }
-    }
-  }
+  components: {
+      cartcontrol
+  },
 };
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
@@ -247,11 +293,43 @@
       bottom: 22px
       z-index: 200
       &.drop-transition
-        transition: all 0.4s
+        transition: all 0.4s cubic-bezier(0.49,-0.29,0.75,0.41)
         .inner
           width: 16px
           height: 16px
           border-radius: 50%
           background: rgb(0,160, 220)
-          transition: all 0.4s
+          transition: all 0.4s linear
+  .shopcart-list
+    position: absolute
+    left: 0
+    top: 0
+    z-index: -1
+    width: 100%
+    &.fold-transition
+      transition: all 0.5s
+      transform: translate3d(0,-100%,0)
+    &.fold-enter,&.flod-leave
+      transform: translate3d(0,0,0)
+    .list-header
+      height: 40px
+      line-height: 40px
+      padding: 0 18px
+      background: #f3f5f7
+      border-bottom: 1px solid rgba(7,17.27,0.1)
+      .title
+        float:left
+        font-size: 14px
+        color: rgb(7,17,27)
+      .empty
+        float: right
+        font-size: 12px
+        color: rgb(0,160,220)
+    .list-content
+      padding: 0 18px
+      max-height: 217px
+      background: #fff
+      
+      
+               
 </style>
