@@ -14,7 +14,7 @@
   	  	<li v-for="item in goods" class="food-list" ref = "foodList">
   	  	  <h1 class="title">{{item.name}}</h1>
   	  	  <ul>
-  	  	  	<li v-for="food in item.foods" class="food-item border-1px">
+  	  	  	<li @click="selectFood(food,$event)" v-for="food in item.foods" class="food-item border-1px">
   	  	  	  <div class="icon">
   	  	  	  	<img width="57px" height="57px" :src="food.icon">
   	  	  	  </div>
@@ -28,7 +28,7 @@
   	  	  	  	  <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
   	  	  	  	</div>
                 <div class="cartControl-wrapper">
-                  <cartControl :food="food"></cartControl>
+                  <cartControl @add="addFood" :food="food"></cartControl>
                 </div>
   	  	  	  </div>
   	  	  	</li>
@@ -83,6 +83,7 @@ export default {
     }
   },
   created() {
+    this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
     this.$http.get('/api/goods').then((response) => {
       response = response.body;
       if (response.errno === ERR_OK) {
@@ -93,7 +94,7 @@ export default {
         });
       }
     });
-    this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
+    
   },
   methods: {
   selectMenu(index,event) {
