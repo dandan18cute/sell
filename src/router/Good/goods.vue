@@ -98,7 +98,7 @@ export default {
         });
       }
     });
-    
+
   },
   methods: {
   selectMenu(index,event) {
@@ -114,6 +114,7 @@ export default {
       return;
     }
     this.selectedFood = food;
+    this.$refs.food.show();
   },
   addFood(target) {
     this._drop(target);
@@ -132,9 +133,9 @@ export default {
       probeType: 3
     });
     this.foodsScroll.on('scroll',(pos)=>{
-    
+
     if(pos.y <=0 ){
-      this.scrollY = Math.abs(Math.round(pos.y));  
+      this.scrollY = Math.abs(Math.round(pos.y));
   }
     });
     },
@@ -153,7 +154,7 @@ export default {
         let el = menuList[index];
         this.meunScroll.scrollToElement(el, 300, 0, -100);
       }
-   
+
   },
   components: {
     shopcart,
@@ -248,7 +249,7 @@ export default {
       	  color: rgb(147,153,159)
       	.desc
       	  line-height: 12px
-      	  margin-bottom: 8px	
+      	  margin-bottom: 8px
       	.extra
       	  line-height: 10px
       	  .count
@@ -267,6 +268,6 @@ export default {
       	.cartControl-wrapper
           position: absolute
           right: 0
-          bottom: 12px 
-      	
+          bottom: 12px
+
 </style>

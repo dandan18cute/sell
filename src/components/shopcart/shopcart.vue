@@ -20,7 +20,7 @@
       </div>
       <div class="ball-container">
         <div v-for="ball in balls">
-          <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop"> 
+          <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
           <div class="ball"v-show="ball.show" >
             <div class="inner inner-hook"></div>
           </div>
@@ -50,10 +50,10 @@
      </transition>
   </div>
   <transition name="fade">
-    <div class="list-mask" @click= "hideList" v-show="listShow"></div>  
+    <div class="list-mask" @click= "hideList" v-show="listShow"></div>
   </transition>
   </div>
-  
+
 </template>
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll';
@@ -63,7 +63,7 @@
       selectFoods: {
        type: Array,
        default() {
-         return [   
+         return [
 	         {
               price: 10,
               count: 1
@@ -126,7 +126,7 @@
         return `还差￥${diff}元起送`;
       }else{
         return '去结算';
-      } 
+      }
       },
       payClass() {
       if(this.totalPrice<this.minPrice){
@@ -146,7 +146,7 @@
             if(!this.scroll) {
               this.scroll = new BScroll(this.$refs.listContent,{
                 click: true
-              }); 
+              });
             }else{
               this.scroll.refresh();
             }
@@ -189,7 +189,7 @@
       },
       addFood(target) {
         this.drop(target);
-      },    
+      },
       beforeDrop(el) {
         let count = this.balls.length;
         while (count--) {
@@ -204,7 +204,7 @@
             let inner = el.getElementsByClassName('inner-hook')[0];
             inner.style.webkitTransform =`translate3d(${x}px,0,0)`;
             inner.style.transform = `translate3d(${x}px,0,0)`;
-          } 
+          }
         }
       },
       dropping(el,done) {
@@ -341,7 +341,7 @@
     z-index: -1
     width: 100%
     transform: translate3d(0, -100%, 0)
-    &.fold-enter-active, &.fold-leave-active      
+    &.fold-enter-active, &.fold-leave-active
       transition: all 0.5s
     &.fold-enter,&.fold-leave-active
       transform: translate3d(0,0,0)
@@ -384,7 +384,7 @@
         .cartcontrol-wrapper
           position: absolute
           right: 0
-          bottom: 6px        
+          bottom: 6px
 .list-mask
   position: fixed
   top: 0
@@ -396,9 +396,9 @@
   opacity: 1
   background: rgba(7,17,27,0.6)
   &.fade-enter-active, &.fade-leave-active
-    transition: all 0.5s
+    transition: all 0.5s linear
   &.fade-enter,&.fade-leave-active
     opacity: 0
-    background: rgba(7,17,27,0)   
-               
+    background: rgba(7,17,27,0)
+
 </style>
