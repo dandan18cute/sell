@@ -1,4 +1,5 @@
 <template>
+<div>
   <div class="goods">
   	<div class="menu-wrapper" ref="menuWrapper">
   	  <ul>
@@ -38,11 +39,14 @@
     </div>
     <shopcart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
   </div>
+  <food :food="selectedFood" ref="food"></food>
+</div>
 </template>
 <script type="text/ecmascript-6">
 import BScroll from 'better-scroll';
 import shopcart from '../../components/shopcart/shopcart';
 import cartControl from '../../components/cartControl/cartControl';
+import food from '../../components/food/food';
   const ERR_OK = 0;
 export default {
   props: {
@@ -55,7 +59,7 @@ export default {
       goods: [],
       listHeight: [],
       scrollY: 0,
-       selectedFood: {}
+      selectedFood: {}
     };
   },
   computed: {
@@ -64,7 +68,7 @@ export default {
         let height1 = this.listHeight[i];
         let height2 = this.listHeight[i+1];
         if(!height2 || (this.scrollY >= height1 && this.scrollY <height2)){
-          //this._followScroll(i);
+          this._followScroll(i);
           return i;
         }
       }
@@ -106,15 +110,14 @@ export default {
     this.foodsScroll.scrollToElement(el,300);
   },
   selectFood(food, event) {
-        if (!event._constructed) {
-          return;
-        }
-        this.selectedFood = food;
-        this.$refs.food.show();
-      },
-      addFood(target) {
-        this._drop(target);
-      },
+    if (!event._constructed) {
+      return;
+    }
+    this.selectedFood = food;
+  },
+  addFood(target) {
+    this._drop(target);
+  },
  _drop(target) {
    this.$nextTick(() => {
      this.$refs.shopcart.drop(target);
@@ -155,6 +158,7 @@ export default {
   components: {
     shopcart,
     cartControl,
+    food,
   }
 };
 </script>
