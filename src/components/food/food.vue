@@ -41,7 +41,7 @@ export default{
       this.showFlag = true;
       this.$nextTick(() => {
         if(!this.scroll){
-          this.scroll = new BScroll(this.$ref.food,{
+          this.scroll = new BScroll(this.$refs.food,{
             click: true
           });
         }else {
