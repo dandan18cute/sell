@@ -1,9 +1,12 @@
 <template>
   <div class="ratingselect">
   	<div class="rating-type border-1px">
-  	  <span @click="select(2,$event)" class="block positive" :class="{'active':selectType===2}">{{desc.all}}<span class="count">{{ratings.length}}</span></span>
-  	  <span  @click="select(0,$event)" class="block positive" :class="{'active':selectType===0}">{{desc.positive}}<span class="count">{{positives.length}}</span></span>
-  	  <span @click="select(1,$event)" class="block negative" :class="{'active':selectType===1}">{{desc.negative}}<span class="count">{{negatives.length}}</span></span>
+  	  <span @click="select(2,$event)" class="block positive" :class="{'active':selectType===2}">{{desc.all}}<span 
+	  class="count">{{ratings.length}}</span></span>
+  	  <span  @click="select(0,$event)" class="block positive" :class="{'active':selectType===0}">{{desc.positive}}<span 
+	  class="count">{{positives.length}}</span></span>
+  	  <span @click="select(1,$event)" class="block negative" :class="{'active':selectType===1}">{{desc.negative}}<span 
+	  class="count">{{negatives.length}}</span></span>
   	</div>
   	<div @click="toggleContent" class="switch" :class="{'on':onlyContent}">
   	  <span class="icon-check_circle"></span>
@@ -16,7 +19,6 @@
   const POSITIVE = 0;
   const NEGATIVE = 1;
   const ALL = 2;
-
   export default {
     props: {
       ratings: {
@@ -39,8 +41,8 @@
           return{
             all: '全部',
             positive: '满意',
-            negative: '不满意',
-          }
+            negative: '不满意'
+          };
         }
       }
     },
@@ -62,18 +64,16 @@
         if(!event._constructed) {
           return;
         }
-        this.selectType = type;
-        this.$emit('ratingtype.select',type);  
+        this.$emit('select',type);  
       },
       toggleContent(event) {
          if(!event._constructed) {
           return;
         }
-        this.onlyContent = !this.onlyContent;
-        this.$emit('content.toggle',this.onlyContent);
-      }
-    }
-  }
+        this.$emit('toggle');
+      },
+    },
+  };
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -123,6 +123,8 @@
   	  	margin-right: 4px
   	  	font-size: 24px
   	  .text
+  	  	display: inline-block
+  	  	vertical-align: top
   	  	font-size: 12px	  
   	  		
   	  	
