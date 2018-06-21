@@ -74,28 +74,6 @@ props: {
 data() {
   return {
     showFlag: false,
-  }
-},
-methods: {
-  show() {
-    this.showFlag = true;
-    this.$nextTick(() => {
-      if(!this.scroll){
-        this.scroll = new BScroll(this.$refs.food, {
-            click: true
-        });
-      }else {
-        this.scroll.refresh();
-      }
-    });
-  },
-<<<<<<< HEAD
-  hide() {
-    this.showFlag = false;
-=======
-  data() {
-    return {
-      showFlag: false,
       selectType: ALL,
       onlyContent: true,
       desc: {
@@ -103,8 +81,7 @@ methods: {
       positive: '推荐',
       negative: '吐槽',
       }
-    }
->>>>>>> ratingselect
+    };
   },
   methods: {
     show() {
@@ -128,7 +105,6 @@ methods: {
       if(!event._constructed){
         return;
       }
-      console.log(event.target);
       this.$emit('add',event.target);
       Vue.set(this.food,'count',1);
     },
