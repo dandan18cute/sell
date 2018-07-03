@@ -4,6 +4,8 @@
 
 ## Build Setup
 
+![image](https://github.com/dandan18cute/sell/blob/master/seller.gif?raw=true)
+
 ``` bash
 # install dependencies
 npm install
