@@ -2,22 +2,26 @@
 
 > sell app
 
-## Build Setup
+## Dynamic map display
 
 ![image](https://github.com/dandan18cute/sell/blob/master/seller.gif?raw=true)
 
 ``` bash
-# install dependencies
-npm install
+# serve with hot reload at localhost:8080、
+ $cd sell
+ $npm run dev
 
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## 技术栈说明
+项目由vue-cli脚手架，通过webpack构建项目。
+
+ 1. Vue-resource和后端交互
+ 2. Vue-router路由实现单页应用。
+ 3. 第三方js库better-scroll
+ 4. 最大程度组件化
+ 5. Html5的localstorage
+ 6. 图标字体的使用
+ 7. 移动端1像素边框
+ 8. Css sticky footer 布局
+ 9. Flex弹性布局
